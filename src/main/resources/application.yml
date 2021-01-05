@@ -1,0 +1,47 @@
+server:
+  port: 9002
+  tomcat:
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
+  use-forward-headers: true
+  servlet:
+    context-path: /minio
+
+spring:
+  application:
+    name: minio
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: 'off'
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # redis配置
+  redis:
+    host: 192.168.158.160
+    port: 6379
+    password: yueliminvc@outlook.com
+    timeout: 10000
+    lettuce:
+      pool:
+        max-idle: 8
+        min-idle: 0
+        max-active: 8
+        max-wait: 10000
+      shutdown-timeout: 100
+
+# minio配置
+minio:
+  endpoint: http://192.168.158.160:9000
+  accessKey: yueliminvc@outlook.com
+  secretKey: yueliminvc@outlook.com
+  bucketImageName: min-io
+
+# 开启Swagger注解
+swagger:
+  enable: true
+
+# 日志配置文件
+logging:
+  config: classpath:log4j2.xml
