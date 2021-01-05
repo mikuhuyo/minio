@@ -1,5 +1,5 @@
 server:
-  port: 9002
+  port: 56082
   tomcat:
     remote-ip-header: x-forwarded-for
     protocol-header: x-forwarded-proto
