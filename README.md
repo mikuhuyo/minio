@@ -1,5 +1,4 @@
-# MinIo
-使用SpringBoot搭建的一个MinIo上传服务.
+# MinIo(文件上传)
 
 ## 基本环境配置
 
@@ -45,7 +44,7 @@ minio/minio server /data
 
 ### 在线查看API文档
 
-> http://127.0.0.1:9002/minio/swagger-ui.html
+> http://127.0.0.1:56082/minio/swagger-ui.html
 
 ### 修改配置
 
