@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
                 .apiInfo(apiInfo())
                 .select()
                 // 自行修改为自己的包路径
-                .apis(RequestHandlerSelectors.basePackage("com.example.minio.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.minio"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -40,14 +40,12 @@ public class SwaggerConfiguration {
      */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("MinIO文件上传API文档")
-                .description("MinIO基本功能")
+                .title("MinIO文件上传API")
+                .description("MinIO文件上传与下载API")
                 // 服务条款网址
-                .termsOfServiceUrl("https://github.com/YueLiMin-say")
+                .termsOfServiceUrl("https://github.com/mikuhuyo")
                 .version("1.0.0")
-                .contact(new Contact("岳立民",
-                        "https://github.com/YueLiMin-say",
-                        "yueliminvc@outlook.com"))
+                .contact(new Contact("岳立民", "https://github.com/mikuhuyo", "yueliminvc@outlook.com"))
                 .build();
     }
 

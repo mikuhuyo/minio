@@ -1,8 +1,52 @@
 # MinIo(文件上传)
 
-## 基本环境配置
+[![GitHub license](https://img.shields.io/github/license/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/issues)
+[![GitHub stars](https://img.shields.io/github/stars/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/network)
+![Java version](https://img.shields.io/badge/Jdk-1.8-yellow)
+![SpringBoot version](https://img.shields.io/badge/SpringBoot-2.1.13-brightgreen)
+![SpringCloud version](https://img.shields.io/badge/MinIO-last-ff69b4)
 
-### 使用docker创建容器
+---
+
+## 预备知识点
+
+- Redis
+- Swagger
+- SpringBoot
+- MinIO
+- SpringTask
+
+## 本仓库
+
+### 关注
+
+[![Stargazers repo roster for @mikuhuyo/minio](https://reporoster.com/stars/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/stargazers)
+
+### 收藏
+
+[![Forkers repo roster for @mikuhuyo/minio](https://reporoster.com/forks/mikuhuyo/minio)](https://github.com/mikuhuyo/minio/network/members)
+
+## 功能演示
+
+### MinIO上传文件
+
+![](./assert/assert-05.png)
+
+![](./assert/assert-06.png)
+
+### SpringBoot上传文件
+
+![](./assert/assert-07.png)
+
+![](./assert/assert-08.png)
+
+![](./assert/assert-09.png)
+
+## 环境搭建
+
+### 创建Docker容器
 
 ```shell script
 docker pull redis:4
@@ -28,24 +72,29 @@ docker run -id -p 9000:9000 --name minio \
 minio/minio server /data
 ```
 
-### MinIO容器说明
+### 创建MinIO存储空间
 
-使用`docker`创建`minio`容器的时候需要注意将新建的同设置为可读可写.
+![](./assert/assert-01.png)
 
-![](./doc/01.png)
+![](./assert/assert-02.png)
 
-![](./doc/02.png)
+![](./assert/assert-03.png)
 
-![](./doc/03.png)
+![](./assert/assert-04.png)
 
-## 使用说明
+## 启动手册
 
-在使用前最好具备Redis, SwaggerUI, SpringBoot, SpringTask基础.
+在请求头中添加`AccessKey`与`SecretKey`字段, 默认值都为`4166e2db0111197e49292c5f36e8efe7`
 
-### 在线查看API文档
+修改`application.yml`文件中的`minio`以及`redis`部分配置就好了.
 
-> http://127.0.0.1:56082/minio/swagger-ui.html
+## 常见问题
 
-### 修改配置
+```shell script
+error occurred
+ErrorResponse(code = AccessDenied, message = Access denied, bucketName = min-io, objectName = null, resource = /min-io, requestId = null, hostId = null)
 
-关于redis, minio的配置, 道友们只需要将`resources/application.yml`配置文件中的配置参数修改一下就可以了.
+# 01.时区问题, 需要同步时间(服务器与本地进行同步).
+# 02.秘钥问题, 检查您的秘钥是否正确.
+
+```

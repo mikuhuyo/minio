@@ -1,4 +1,4 @@
-package com.minio.domain.intercept;
+package com.minio.domain.handler;
 
 import com.minio.domain.domain.CommonResult;
 import com.minio.domain.domain.ResultCode;

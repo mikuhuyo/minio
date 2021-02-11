@@ -27,48 +27,50 @@ import java.util.UUID;
 public class MinIoController {
     @Value("${minio.bucketImageName}")
     private String bucketImageName;
+    @Value("${minio.serviceName}")
+    private String serviceName;
     @Autowired
     private MinIoUtil minIoUtil;
     @Autowired
     private JedisPool jedisPool;
 
-    @PostMapping("/bucket/{bucketName}")
-    @ApiOperation(value = "新建桶", notes = "新建桶")
-    public CommonResult createBucket(@PathVariable("bucketName") String bucketName) {
-        // https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
-        StringBuilder policyJsonBuilder = new StringBuilder();
-        policyJsonBuilder.append("{\n");
-        policyJsonBuilder.append("    \"Statement\": [\n");
-        policyJsonBuilder.append("        {\n");
-        policyJsonBuilder.append("            \"Action\": [\n");
-        policyJsonBuilder.append("                \"s3:GetBucketLocation\",\n");
-        policyJsonBuilder.append("                \"s3:ListBucket\"\n");
-        policyJsonBuilder.append("            ],\n");
-        policyJsonBuilder.append("            \"Effect\": \"Allow\",\n");
-        policyJsonBuilder.append("            \"Principal\": \"*\",\n");
-        policyJsonBuilder.append("            \"Resource\": \"arn:aws:s3:::" + bucketName + "\"\n");
-        policyJsonBuilder.append("        },\n");
-        policyJsonBuilder.append("        {\n");
-        policyJsonBuilder.append("            \"Action\": \"s3:GetObject\",\n");
-        policyJsonBuilder.append("            \"Effect\": \"Allow\",\n");
-        policyJsonBuilder.append("            \"Principal\": \"*\",\n");
-        policyJsonBuilder.append("            \"Resource\": \"arn:aws:s3:::"
-                + bucketName + "/project-file*\"\n");
-        policyJsonBuilder.append("        }\n");
-        policyJsonBuilder.append("    ],\n");
-        policyJsonBuilder.append("    \"Version\": \"2012-10-17\"\n");
-        policyJsonBuilder.append("}\n");
-
-        try {
-            minIoUtil.makeBucket(bucketName);
-            minIoUtil.setBucketPolicy(bucketName, policyJsonBuilder.toString());
-            return CommonResult.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return CommonResult.failed(String.format("[%s] 新建失败", bucketName));
-    }
+    // @PostMapping("/bucket/{bucketName}")
+    // @ApiOperation(value = "新建桶", notes = "新建桶")
+    // public CommonResult createBucket(@PathVariable("bucketName") String bucketName) {
+    //     // https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
+    //     StringBuilder policyJsonBuilder = new StringBuilder();
+    //     policyJsonBuilder.append("{\n");
+    //     policyJsonBuilder.append("    \"Statement\": [\n");
+    //     policyJsonBuilder.append("        {\n");
+    //     policyJsonBuilder.append("            \"Action\": [\n");
+    //     policyJsonBuilder.append("                \"s3:GetBucketLocation\",\n");
+    //     policyJsonBuilder.append("                \"s3:ListBucket\"\n");
+    //     policyJsonBuilder.append("            ],\n");
+    //     policyJsonBuilder.append("            \"Effect\": \"Allow\",\n");
+    //     policyJsonBuilder.append("            \"Principal\": \"*\",\n");
+    //     policyJsonBuilder.append("            \"Resource\": \"arn:aws:s3:::" + bucketName + "\"\n");
+    //     policyJsonBuilder.append("        },\n");
+    //     policyJsonBuilder.append("        {\n");
+    //     policyJsonBuilder.append("            \"Action\": \"s3:GetObject\",\n");
+    //     policyJsonBuilder.append("            \"Effect\": \"Allow\",\n");
+    //     policyJsonBuilder.append("            \"Principal\": \"*\",\n");
+    //     policyJsonBuilder.append("            \"Resource\": \"arn:aws:s3:::"
+    //             + bucketName + "/project-file*\"\n");
+    //     policyJsonBuilder.append("        }\n");
+    //     policyJsonBuilder.append("    ],\n");
+    //     policyJsonBuilder.append("    \"Version\": \"2012-10-17\"\n");
+    //     policyJsonBuilder.append("}\n");
+    //
+    //     try {
+    //         minIoUtil.makeBucket(bucketName);
+    //         minIoUtil.setBucketPolicy(bucketName, policyJsonBuilder.toString());
+    //         return CommonResult.success();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    //
+    //     return CommonResult.failed(String.format("[%s] 新建失败", bucketName));
+    // }
 
     @PostMapping
     @ApiOperation(value = "文件上传", notes = "文件上传")
@@ -90,8 +92,10 @@ public class MinIoController {
             InputStream inputStream = file.getInputStream();
             // 存储文件名称
             assert originalFilename != null;
-            String newFileName = "image/" + UUID.randomUUID().toString().replaceAll("-", "") +
-                    originalFilename.substring(originalFilename.lastIndexOf("."));
+            String newFileName = serviceName
+                    + "/"
+                    + UUID.randomUUID().toString().replaceAll("-", "")
+                    + originalFilename.substring(originalFilename.lastIndexOf("."));
 
             minIoUtil.putObject(bucketImageName, newFileName, contentType, inputStream);
             inputStream.close();

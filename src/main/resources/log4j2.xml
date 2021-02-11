@@ -4,8 +4,7 @@
         <property name="prjname">${project.name}</property>
         <property name="logdir">logs</property>
         <property name="PATTERN">
-            [${project.name}][${project.port}] %date{YYYY-MM-dd HH:mm:ss,SSS} %highlight{%level} [%thread][%file:%line]
-            - %msg%n%throwable
+            [${project.name}][${project.port}] %date{YYYY-MM-dd HH:mm:ss,SSS} %highlight{%level} [%thread][%file:%line] - %msg%n%throwable
         </property>
     </properties>
     <Appenders>
