@@ -4,6 +4,8 @@ import com.minio.domain.domain.CommonResult;
 import com.minio.utils.MinIoUtil;
 import com.minio.vo.ImageVo;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +25,6 @@ import java.util.UUID;
  */
 @Api(value = "MinIO服务接口")
 @RestController
-@RequestMapping("/image")
 public class MinIoController {
     @Value("${minio.bucketImageName}")
     private String bucketImageName;
@@ -34,7 +35,7 @@ public class MinIoController {
     @Autowired
     private JedisPool jedisPool;
 
-    // @PostMapping("/bucket/{bucketName}")
+    // @PostMapping("/image/bucket/{bucketName}")
     // @ApiOperation(value = "新建桶", notes = "新建桶")
     // public CommonResult createBucket(@PathVariable("bucketName") String bucketName) {
     //     // https://docs.aws.amazon.com/AmazonS3/latest/dev/access-policy-language-overview.html
@@ -72,9 +73,9 @@ public class MinIoController {
     //     return CommonResult.failed(String.format("[%s] 新建失败", bucketName));
     // }
 
-    @PostMapping
-    @ApiOperation(value = "文件上传", notes = "文件上传")
-    public CommonResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/image")
+    @ApiOperation(value = "文件上传")
+    public CommonResult<String> uploadFile(@RequestParam(value = "file", required = true) MultipartFile file) {
         if (file.getSize() == 0 || file.isEmpty()) {
             return CommonResult.failed("接收了个寂寞");
         }
@@ -111,11 +112,20 @@ public class MinIoController {
         return CommonResult.failed();
     }
 
-    @DeleteMapping
-    @ApiOperation(value = "删除文件", notes = "删除文件")
-    public CommonResult deleteImage(@RequestBody ImageVo imageVo) {
+    @DeleteMapping("/image/{imageUrl}")
+    @ApiOperation(value = "删除文件")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "imageVo", value = "实体类", required = true, dataType = "ImageVo", paramType = "body"),
+            @ApiImplicitParam(name = "imageUrl", value = "文件URL地址", required = true, dataType = "string", paramType = "query")
+    })
+    public CommonResult deleteImage(@RequestBody(required = false) ImageVo imageVo, @PathVariable("imageUrl") String url) {
 
-        String imageUrl = imageVo.getImageUrl();
+        String imageUrl = "";
+        imageUrl = url;
+
+        if (imageVo != null) {
+            imageUrl = imageVo.getImageUrl();
+        }
 
         try {
             minIoUtil.deleteFile(bucketImageName, imageUrl);
@@ -128,11 +138,12 @@ public class MinIoController {
         return CommonResult.failed();
     }
 
-    @GetMapping("/{filename}")
-    @ApiOperation(value = "文件下载", notes = "文件下载")
-    public CommonResult downloadFile(@PathVariable("filename") String filename, HttpServletResponse httpResponse) {
+    @GetMapping("/image/{filename}")
+    @ApiOperation(value = "文件下载")
+    @ApiImplicitParam(name = "filename", value = "文件名称", required = true, dataType = "string", paramType = "query")
+    public CommonResult downloadFile(@PathVariable(value = "filename", required = true) String filename, HttpServletResponse httpResponse) {
         try {
-            InputStream object = minIoUtil.getObject(bucketImageName, "/image/" + filename);
+            InputStream object = minIoUtil.getObject(bucketImageName, "/" + serviceName + "/" + filename);
             byte buf[] = new byte[1024];
             int length = 0;
             httpResponse.reset();
