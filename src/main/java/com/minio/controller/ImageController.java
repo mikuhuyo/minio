@@ -21,9 +21,9 @@ import java.util.UUID;
  * @author yuelimin
  * @since 1.8
  */
-@Api(value = "MinIO服务接口")
 @RestController
-public class MinIoController {
+@Api(value = "图片服务接口", tags = "Image")
+public class ImageController {
     @Value("${minio.bucketImageName}")
     private String bucketImageName;
     @Value("${minio.serviceName}")
@@ -112,7 +112,7 @@ public class MinIoController {
 
     @DeleteMapping("/image/{imageUrl}")
     @ApiOperation(value = "删除文件")
-    @ApiImplicitParam(name = "imageUrl", value = "文件URL地址", required = true, dataType = "string", paramType = "query")
+    @ApiImplicitParam(name = "imageUrl", value = "文件URL地址", required = true, dataType = "string")
     public CommonResult deleteImage(@PathVariable("imageUrl") String url) {
 
         String imageUrl = url;
@@ -129,15 +129,14 @@ public class MinIoController {
 
     @GetMapping("/image/{filename}")
     @ApiOperation(value = "文件下载")
-    @ApiImplicitParam(name = "filename", value = "文件名称", required = true, dataType = "string", paramType = "query")
-    public CommonResult downloadFile(@PathVariable(value = "filename", required = true) String filename, HttpServletResponse httpResponse) {
+    @ApiImplicitParam(name = "filename", value = "文件名称", required = true, dataType = "string")
+    public CommonResult downloadFile(@PathVariable("filename") String filename, HttpServletResponse httpResponse) {
         try {
             InputStream object = minIoUtil.getObject(bucketImageName, "/" + serviceName + "/" + filename);
             byte buf[] = new byte[1024];
             int length = 0;
             httpResponse.reset();
-            httpResponse.setHeader("Content-Disposition", "attachment;filename=" +
-                    URLEncoder.encode(filename, "UTF-8"));
+            httpResponse.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
             httpResponse.setContentType("application/octet-stream");
             httpResponse.setCharacterEncoding("utf-8");
             OutputStream outputStream = httpResponse.getOutputStream();

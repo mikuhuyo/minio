@@ -21,7 +21,7 @@ public class CommonResult<T> implements Serializable {
     private String message;
     private T data;
 
-    protected CommonResult(boolean flag, String code, String message) {
+    public CommonResult(boolean flag, String code, String message) {
         this.flag = flag;
         this.code = code;
         this.message = message;

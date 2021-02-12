@@ -12,6 +12,7 @@ public enum ResultCode implements IErrorCode {
     SUCCESS(true, "00000", "操作成功"),
     USER_SIGNATURE_ERROR(false, "A0340", "用户签名异常"),
     RSA_SIGNATURE_ERROR(false, "A0341", "RSA签名错误"),
+    VALIDATE_FAILED(false, "A0400", "用户请求错误"),
     FAILED(false, "B0001", "系统执行失败"),
     UNKNOWN_ERROR(false, "B0300", "系统资源异常"),
     NOT_FOUND(false, "B0404", "对象丢失"),
