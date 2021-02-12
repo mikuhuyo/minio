@@ -17,6 +17,7 @@
 - SpringBoot
 - MinIO
 - SpringTask
+- 落魄程序员
 
 ## 本仓库
 
@@ -47,6 +48,18 @@
 ## 环境搭建
 
 ### 创建Docker容器
+
+```shell script
+# 拉取镜像
+docker pull mysql:5.7
+
+# 创建容器
+docker run --name mysql \
+--privileged=true \
+-p 3306:3306 \
+-e MYSQL_ROOT_PASSWORD=yueliminvc@outlook.com \
+-d mysql:5.7
+```
 
 ```shell script
 docker pull redis:4
@@ -84,11 +97,11 @@ minio/minio server /data
 
 ## 启动手册
 
-在请求头中添加`AccessKey`与`SecretKey`字段, 默认值都为`4166e2db0111197e49292c5f36e8efe7`
+在请求头中添加`AccessKey`, `SecretKey`与`AppId`字段, 根据`Swagger`接口文档获取.
 
 如果想要关闭请求头校验就将`WebMvcConfig`中的拦截器注释掉.
 
-修改`application.yml`文件中的`minio`以及`redis`部分配置就好了.
+修改`application-dev.yml`文件中的`minio`, `mybatis-plus`与`redis`部分配置就好了.
 
 ## 常见问题
 
