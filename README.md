@@ -86,6 +86,8 @@ minio/minio server /data
 
 在请求头中添加`AccessKey`与`SecretKey`字段, 默认值都为`4166e2db0111197e49292c5f36e8efe7`
 
+如果想要关闭请求头校验就将`WebMvcConfig`中的拦截器注释掉.
+
 修改`application.yml`文件中的`minio`以及`redis`部分配置就好了.
 
 ## 常见问题
