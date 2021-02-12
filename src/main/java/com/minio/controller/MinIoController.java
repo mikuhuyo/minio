@@ -2,10 +2,8 @@ package com.minio.controller;
 
 import com.minio.domain.domain.CommonResult;
 import com.minio.utils.MinIoUtil;
-import com.minio.vo.ImageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,19 +112,10 @@ public class MinIoController {
 
     @DeleteMapping("/image/{imageUrl}")
     @ApiOperation(value = "删除文件")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "imageVo", value = "实体类", required = true, dataType = "ImageVo", paramType = "body"),
-            @ApiImplicitParam(name = "imageUrl", value = "文件URL地址", required = true, dataType = "string", paramType = "query")
-    })
-    public CommonResult deleteImage(@RequestBody(required = false) ImageVo imageVo, @PathVariable("imageUrl") String url) {
+    @ApiImplicitParam(name = "imageUrl", value = "文件URL地址", required = true, dataType = "string", paramType = "query")
+    public CommonResult deleteImage(@PathVariable("imageUrl") String url) {
 
-        String imageUrl = "";
-        imageUrl = url;
-
-        if (imageVo != null) {
-            imageUrl = imageVo.getImageUrl();
-        }
-
+        String imageUrl = url;
         try {
             minIoUtil.deleteFile(bucketImageName, imageUrl);
             jedisPool.getResource().srem("storage", imageUrl);

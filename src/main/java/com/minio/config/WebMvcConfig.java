@@ -30,7 +30,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequestSignatureIntercept()).addPathPatterns("/**").excludePathPatterns("/static/**");
+        registry.addInterceptor(new RequestSignatureIntercept())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/static/**")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
     }
 
     /**
