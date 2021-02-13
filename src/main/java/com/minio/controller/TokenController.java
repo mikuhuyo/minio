@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author yuelimin
@@ -39,7 +40,7 @@ public class TokenController {
     @GetMapping("/token/sign/{appId}")
     @ApiOperation("获取加密签名")
     @ApiImplicitParam(value = "应用ID", name = "appId", required = true, dataType = "string")
-    public CommonResult<TokenDTO> getSign(@PathVariable("appId") String appId) {
+    public CommonResult<TokenDTO> getSign(@PathVariable("appId") String appId) throws UnsupportedEncodingException {
         return CommonResult.success(signService.getSign(appId));
     }
 
