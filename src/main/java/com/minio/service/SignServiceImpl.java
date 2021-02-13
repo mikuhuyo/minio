@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -26,6 +28,9 @@ import java.util.UUID;
 public class SignServiceImpl implements SignService {
     @Autowired
     private SignMapper signMapper;
+
+    private final Base64.Decoder decoder = Base64.getDecoder();
+    private final Base64.Encoder encoder = Base64.getEncoder();
 
     @Override
     public SignDTO getSignByAppId(String appId) {
@@ -39,15 +44,16 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public TokenDTO getSign(String appId) {
+    public TokenDTO getSign(String appId) throws UnsupportedEncodingException {
         Sign sign = signMapper.selectOne(new LambdaQueryWrapper<Sign>().eq(Sign::getAppId, appId));
         String access = BCryptUtil.hashpw(sign.getUsername(), sign.getSalt());
         String secret = BCryptUtil.hashpw(sign.getSalt(), sign.getSalt());
 
         TokenDTO tokenDTO = new TokenDTO();
         tokenDTO.setAppId(appId);
-        tokenDTO.setAccessKey(access);
-        tokenDTO.setSecretKey(secret);
+        tokenDTO.setAccessKey(encoder.encodeToString(access.getBytes("UTF-8")));
+        tokenDTO.setSecretKey(encoder.encodeToString(secret.getBytes("UTF-8")));
+
         return tokenDTO;
     }
 

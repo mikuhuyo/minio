@@ -5,6 +5,8 @@ import com.minio.dto.SignDTO;
 import com.minio.dto.TokenDTO;
 import com.minio.vo.SignVO;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author yuelimin
  * @version 1.0.0
@@ -35,7 +37,7 @@ public interface SignService {
      * @param appId 应用ID
      * @return
      */
-    TokenDTO getSign(String appId);
+    TokenDTO getSign(String appId) throws UnsupportedEncodingException;
 
     /**
      * 根据应用ID更新状态
