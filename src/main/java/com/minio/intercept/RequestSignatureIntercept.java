@@ -28,6 +28,11 @@ public class RequestSignatureIntercept extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 发起预检请求直接放行
+        if ("OPTIONS".equals(request.getMethod().toUpperCase())) {
+            return true;
+        }
+
         String appId = request.getHeader("AppId");
         String accessKey = request.getHeader("AccessKey");
         String secretKey = request.getHeader("SecretKey");
